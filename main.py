@@ -55,11 +55,16 @@ def start_screen():
 
 
 def load_level(filename):
-    with open('data/' + filename, 'r') as mapFile:
-        level_map = [line.strip() for line in mapFile]
+    try:
+        with open('data/' + filename, 'r') as mapFile:
+            level_map = [line.strip() for line in mapFile]
 
-    max_width = max(map(len, level_map))
-    return list(map(lambda x: x.ljust(max_width, '#'), level_map))
+        max_width = max(map(len, level_map))
+        return list(map(lambda x: x.ljust(max_width, '#'), level_map))
+    except FileNotFoundError as e:
+        print(f'Cannot open level file: {filename}')
+        print(e)
+        sys.exit()
 
 
 tile_image = {
