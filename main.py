@@ -102,7 +102,8 @@ def generate_map(level):
 
 
 start_screen()
-cur_level = load_level('level1.txt')
+level_file = input("Введите имя файла с уровнем (Доступные: level1.txt, level2.txt, level3.txt): ")
+cur_level = load_level(level_file)
 player = generate_map(cur_level)
 
 running = True
