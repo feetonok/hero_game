@@ -92,6 +92,20 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
 
 
+class Camera:
+    def __init__(self):
+        self.dx = 0
+        self.dy = 0
+
+    def apply(self, obj):
+        obj.rect.x += self.dx
+        obj.rect.y += self.dy
+
+    def update(self, target):
+        self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
+        self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
+
+
 def generate_map(level):
     player = None
     for y in range(len(level)):
@@ -110,6 +124,8 @@ start_screen()
 level_file = input("Введите имя файла с уровнем (Доступные: level1.txt, level2.txt, level3.txt): ")
 cur_level = load_level(level_file)
 player = generate_map(cur_level)
+
+camera = Camera()
 
 running = True
 while running:
@@ -130,6 +146,12 @@ while running:
             if not pygame.sprite.spritecollideany(player, walls,
                                                   collided=lambda spr, wall: new_rect.colliderect(wall.rect)):
                 player.rect = new_rect
+
+    camera.update(player)
+    for sprite in all_sprites:
+        camera.apply(sprite)
+    for sprite in player_group:
+        camera.apply(sprite)
 
     screen.fill((0, 0, 0))
     all_sprites.draw(screen)
